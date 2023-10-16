@@ -8,9 +8,9 @@ public class Car : MonoBehaviour
 
     [SerializeField] private float speedEnemy = 2f;
     [SerializeField] Transform player;
+    [SerializeField] private float distance;
 
     private NavMeshAgent agent;
-
 
     void Start()
     {
