@@ -11674,6 +11674,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: edcb6d6e992ae56459b5524fa3ac04ae, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 1998295342544622823, guid: edcb6d6e992ae56459b5524fa3ac04ae, type: 3}
       propertyPath: m_Layer
       value: 10
@@ -13532,7 +13536,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 6336
+    m_Bits: 7360
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: a495a537350d7e443affddae7219b9d2, type: 2}
   m_TargetDisplay: 0
