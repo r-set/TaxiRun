@@ -1,30 +1,45 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Car : MonoBehaviour
 {
 
-    [SerializeField] private float speedEnemy = 2f;
     [SerializeField] Transform player;
-    [SerializeField] private float distance;
+    private float rayDistance = 1f;
 
+    private LayerMask _playerMask;
     private NavMeshAgent agent;
+    private bool _visiblePlayer;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        _playerMask = LayerMask.GetMask("Player");
     }
 
     void Update()
     {
-        Move();
+        VesiblePlayer();
+
+        if (!_visiblePlayer)
+        {
+            Move();
+        }   
     }
 
     private void Move()
     {
-        var step = speedEnemy * Time.deltaTime; 
-        transform.position = Vector3.MoveTowards(transform.position, player.transform.position, step);
+
+    }
+
+    private void VesiblePlayer()
+    {
+        _visiblePlayer = Physics.Raycast(transform.position, Vector3.forward, rayDistance, _playerMask);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, Vector3.forward * rayDistance);
     }
 }
