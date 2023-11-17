@@ -4,16 +4,16 @@ using UnityEngine.AI;
 public class Car : MonoBehaviour
 {
 
-    [SerializeField] Transform player;
-    private float rayDistance = 1f;
+    [SerializeField] private Transform _player;
+    private float _rayDistance = 1f;
 
     private LayerMask _playerMask;
-    private NavMeshAgent agent;
+    private NavMeshAgent _agent;
     private bool _visiblePlayer;
 
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        _agent = GetComponent<NavMeshAgent>();
         _playerMask = LayerMask.GetMask("Player");
     }
 
@@ -34,12 +34,12 @@ public class Car : MonoBehaviour
 
     private void VesiblePlayer()
     {
-        _visiblePlayer = Physics.Raycast(transform.position, Vector3.forward, rayDistance, _playerMask);
+        _visiblePlayer = Physics.Raycast(transform.position, Vector3.forward, _rayDistance, _playerMask);
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, Vector3.forward * rayDistance);
+        Gizmos.DrawRay(transform.position, Vector3.forward * _rayDistance);
     }
 }

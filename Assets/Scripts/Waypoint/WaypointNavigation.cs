@@ -1,26 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WaypointNavigation : MonoBehaviour
 {
 
-    private WaypointMovement controller;
+    private WaypointMovement _controller;
     public Waypoint currentWaypoint;
 
     private void Awake()
     {
-        controller = GetComponent<WaypointMovement>();
+        _controller = GetComponent<WaypointMovement>();
     }
 
     void Start()
     {
-        controller.SetDestination(currentWaypoint.GetPosition());
+        _controller.SetDestination(currentWaypoint.GetPosition());
     }
 
     void Update()
     {
-        if (controller._reachedDestination)
+        if (_controller.reachedDestination)
         {
 
             bool shouldBranch = false;
@@ -40,7 +38,7 @@ public class WaypointNavigation : MonoBehaviour
             }
 
             currentWaypoint = currentWaypoint.nextWaypoint;
-            controller.SetDestination(currentWaypoint.GetPosition());
+            _controller.SetDestination(currentWaypoint.GetPosition());
         }
     }
 }

@@ -20,7 +20,7 @@ TagManager:
   - Route
   - PlayerMP
   - Minimap
-  - 
+  - Light
   - 
   - 
   - 
@@ -46,4 +46,7 @@ TagManager:
     locked: 0
   - name: UI
     uniqueID: 1068081709
+    locked: 0
+  - name: Particles
+    uniqueID: 1743693681
     locked: 0

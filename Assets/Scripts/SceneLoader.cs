@@ -4,12 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    [SerializeField] private float sceneLoadDelay = 2f;
-
-    public void Awake()
-    {
-
-    }
+    [SerializeField] private float _sceneLoadDelay = 2f;
 
     public void LoadGame()
     {
@@ -28,7 +23,7 @@ public class SceneLoader : MonoBehaviour
 
     public void LoadGameOver()
     {
-        StartCoroutine(WaitAndLoad("GameOver", sceneLoadDelay));
+        StartCoroutine(WaitAndLoad("GameOver", _sceneLoadDelay));
     }
 
     public void QuitGame()

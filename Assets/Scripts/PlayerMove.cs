@@ -2,20 +2,23 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    [SerializeField] private LineRenderer routeLine;
-    [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private float moveSpeed = 1f;
-    [SerializeField] private float rotationSpeed = 270f;
+    [Header("Move Settings")]
+    [SerializeField] private float _moveSpeed = 1f;
+    [SerializeField] private float _rotationSpeed = 270f;
     [SerializeField] private float _minDistance = 0.1f;
 
+    [Header("Route & Prefab")]
+    [SerializeField] private LineRenderer _routeLine;
+    [SerializeField] private GameObject _playerPrefab;
+
     private Vector3[] positions = new Vector3[6];
-    private Vector3[] pos;
+    private Vector3[] _pos;
     private int index = 0;
 
     void Start()
     {
-        pos = GetLinePointsInWorldSpace();
-        playerPrefab.transform.position = pos[index];
+        _pos = GetLinePointsInWorldSpace();
+        _playerPrefab.transform.position = _pos[index];
     }
 
     void Update()
@@ -25,24 +28,24 @@ public class PlayerMove : MonoBehaviour
 
     Vector3[] GetLinePointsInWorldSpace()
     {
-        routeLine.GetPositions(positions);
+        _routeLine.GetPositions(positions);
         return positions;
     }
 
     void Move()
     {
-        playerPrefab.transform.position = Vector3.MoveTowards(playerPrefab.transform.position, pos[index], moveSpeed * Time.deltaTime);
+        _playerPrefab.transform.position = Vector3.MoveTowards(_playerPrefab.transform.position, _pos[index], _moveSpeed * Time.deltaTime);
 
-        Vector3 destDirection = pos[index] - playerPrefab.transform.position;
+        Vector3 destDirection = _pos[index] - _playerPrefab.transform.position;
         destDirection.y = 0;
         float destDistance = destDirection.magnitude;
 
-        if (playerPrefab.transform.position != pos[index])
+        if (_playerPrefab.transform.position != _pos[index])
         {
             if (destDistance >= _minDistance)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(destDirection);
-                playerPrefab.transform.rotation = Quaternion.RotateTowards(playerPrefab.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                _playerPrefab.transform.rotation = Quaternion.RotateTowards(_playerPrefab.transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
             }
         }
         else
@@ -50,7 +53,7 @@ public class PlayerMove : MonoBehaviour
             index += 1;
         }
 
-        if (index == pos.Length)
+        if (index == _pos.Length)
         {
             index = 5;
         }

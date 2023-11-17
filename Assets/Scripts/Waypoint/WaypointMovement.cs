@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WaypointMovement : MonoBehaviour
@@ -9,7 +7,7 @@ public class WaypointMovement : MonoBehaviour
     [SerializeField] private float _rotationSpeed = 5f;
     [SerializeField] private float _speed = 1f;
 
-    [HideInInspector] public bool _reachedDestination;
+    [HideInInspector] public bool reachedDestination;
 
     private void Update()
     {
@@ -20,14 +18,14 @@ public class WaypointMovement : MonoBehaviour
             float destDistance = destDirection.magnitude;
             if(destDistance >= _minDistance)
             {
-                _reachedDestination = false;
+                reachedDestination = false;
                 Quaternion targetRotation = Quaternion.LookRotation(destDirection);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
                 transform.Translate(Vector3.forward * _speed * Time.deltaTime);
             }
             else
             {
-                _reachedDestination = true;
+                reachedDestination = true;
             }
         }
     }
@@ -35,6 +33,6 @@ public class WaypointMovement : MonoBehaviour
     public void SetDestination(Vector3 _desination)
     {
         this._destination = _desination;
-        _reachedDestination = false;
+        reachedDestination = false;
     }
 }
