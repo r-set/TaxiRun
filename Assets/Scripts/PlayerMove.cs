@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
@@ -11,36 +13,57 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private LineRenderer _routeLine;
     [SerializeField] private GameObject _playerPrefab;
 
-    private Vector3[] positions = new Vector3[6];
-    private Vector3[] _pos;
-    private int index = 0;
+    [Header("Score")]
+    [SerializeField] private TMP_Text scoreText;
+    private int score = 0;
+    private int pointsForCompletion = 800; // Очки за завершение маршрута
+
+    private Vector3[] _routePoints;
+    private int _currentRouteIndex = 0;
+    private bool _routeCompleted = false;
+
+    private const int START_INDEX = 0;
+    private const int NEXT_POINT_INDEX = 1;
 
     void Start()
     {
-        _pos = GetLinePointsInWorldSpace();
-        _playerPrefab.transform.position = _pos[index];
+        InitializeRoutePoints();
+        UpdateScoreText();
     }
 
     void Update()
     {
-        Move();
+        if (!_routeCompleted && _routePoints != null && _routePoints.Length > NEXT_POINT_INDEX)
+        {
+            Move();
+        }
     }
 
-    Vector3[] GetLinePointsInWorldSpace()
+    void InitializeRoutePoints()
     {
-        _routeLine.GetPositions(positions);
-        return positions;
+        _routePoints = new Vector3[_routeLine.positionCount];
+        _routeLine.GetPositions(_routePoints);
+        _routePoints[START_INDEX] = _playerPrefab.transform.position;
     }
 
     void Move()
     {
-        _playerPrefab.transform.position = Vector3.MoveTowards(_playerPrefab.transform.position, _pos[index], _moveSpeed * Time.deltaTime);
+        Vector3 currentPosition = _playerPrefab.transform.position;
 
-        Vector3 destDirection = _pos[index] - _playerPrefab.transform.position;
+        if (_routePoints == null || _currentRouteIndex >= _routePoints.Length)
+        {
+            Debug.LogWarning("Маршрут не содержит достаточно точек.");
+            return;
+        }
+
+        Vector3 targetPosition = _routePoints[_currentRouteIndex];
+        _playerPrefab.transform.position = Vector3.MoveTowards(currentPosition, targetPosition, _moveSpeed * Time.deltaTime);
+
+        Vector3 destDirection = targetPosition - currentPosition;
         destDirection.y = 0;
         float destDistance = destDirection.magnitude;
 
-        if (_playerPrefab.transform.position != _pos[index])
+        if (currentPosition != targetPosition)
         {
             if (destDistance >= _minDistance)
             {
@@ -50,12 +73,62 @@ public class PlayerMove : MonoBehaviour
         }
         else
         {
-            index += 1;
+            _currentRouteIndex++;
+
+            if (_currentRouteIndex >= _routePoints.Length)
+            {
+                _routeCompleted = true;
+                score += pointsForCompletion; // Добавление 800 очков за завершение маршрута
+                UpdateScoreText(); // Обновление текста счетчика
+                Debug.Log("Маршрут пройден!");
+            }
+        }
+    }
+
+    void RemoveRoutePoint(int indexToRemove)
+    {
+        if (indexToRemove < START_INDEX || indexToRemove >= _routePoints.Length)
+        {
+            Debug.LogWarning("Недопустимый индекс для удаления точки маршрута");
+            return;
         }
 
-        if (index == _pos.Length)
+        List<Vector3> newRoutePointsList = new List<Vector3>(_routePoints);
+        newRoutePointsList.RemoveAt(indexToRemove);
+        _routePoints = newRoutePointsList.ToArray();
+
+        _routeLine.positionCount = _routePoints.Length;
+        _routeLine.SetPositions(_routePoints);
+    }
+
+    void FixedUpdate()
+    {
+        if (!_routeCompleted)
         {
-            index = 5;
+            UpdateRouteLine();
+        }
+    }
+
+    void UpdateRouteLine()
+    {
+        _routePoints[START_INDEX] = _playerPrefab.transform.position;
+        _routeLine.SetPosition(START_INDEX, _routePoints[START_INDEX]);
+
+        for (int i = NEXT_POINT_INDEX; i < _routeLine.positionCount; i++)
+        {
+            if (_routePoints[i] == _routePoints[START_INDEX])
+            {
+                RemoveRoutePoint(i);
+                break;
+            }
+        }
+    }
+
+    void UpdateScoreText()
+    {
+        if (scoreText != null)
+        {
+            scoreText.text = "Score: " + score.ToString(); // Обновление текста счетчика
         }
     }
 }
