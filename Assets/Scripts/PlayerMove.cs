@@ -16,7 +16,7 @@ public class PlayerMove : MonoBehaviour
     [Header("Score")]
     [SerializeField] private TMP_Text scoreText;
     private int score = 0;
-    private int pointsForCompletion = 800; // Очки за завершение маршрута
+    private int pointsForCompletion = 800;
 
     private Vector3[] _routePoints;
     private int _currentRouteIndex = 0;
@@ -52,7 +52,6 @@ public class PlayerMove : MonoBehaviour
 
         if (_routePoints == null || _currentRouteIndex >= _routePoints.Length)
         {
-            Debug.LogWarning("Маршрут не содержит достаточно точек.");
             return;
         }
 
@@ -78,9 +77,8 @@ public class PlayerMove : MonoBehaviour
             if (_currentRouteIndex >= _routePoints.Length)
             {
                 _routeCompleted = true;
-                score += pointsForCompletion; // Добавление 800 очков за завершение маршрута
-                UpdateScoreText(); // Обновление текста счетчика
-                Debug.Log("Маршрут пройден!");
+                score += pointsForCompletion;
+                UpdateScoreText();
             }
         }
     }
@@ -89,7 +87,6 @@ public class PlayerMove : MonoBehaviour
     {
         if (indexToRemove < START_INDEX || indexToRemove >= _routePoints.Length)
         {
-            Debug.LogWarning("Недопустимый индекс для удаления точки маршрута");
             return;
         }
 
@@ -128,7 +125,7 @@ public class PlayerMove : MonoBehaviour
     {
         if (scoreText != null)
         {
-            scoreText.text = "Score: " + score.ToString(); // Обновление текста счетчика
+            scoreText.text = "Score: " + score.ToString();
         }
     }
 }
