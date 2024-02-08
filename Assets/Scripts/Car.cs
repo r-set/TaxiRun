@@ -8,16 +8,14 @@ public class Car : MonoBehaviour
     private float _rayDistance = 1f;
 
     private LayerMask _playerMask;
-    private NavMeshAgent _agent;
     private bool _visiblePlayer;
 
-    void Start()
+    private void Start()
     {
-        _agent = GetComponent<NavMeshAgent>();
         _playerMask = LayerMask.GetMask("Player");
     }
 
-    void Update()
+    private void Update()
     {
         VesiblePlayer();
 

@@ -14,9 +14,9 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private GameObject _playerPrefab;
 
     [Header("Score")]
-    [SerializeField] private TMP_Text scoreText;
-    private int score = 0;
-    private int pointsForCompletion = 800;
+    [SerializeField] private TMP_Text _scoreText;
+    private int _score = 0;
+    private int _pointsForCompletion = 500;
 
     private Vector3[] _routePoints;
     private int _currentRouteIndex = 0;
@@ -25,28 +25,45 @@ public class PlayerMove : MonoBehaviour
     private const int START_INDEX = 0;
     private const int NEXT_POINT_INDEX = 1;
 
-    void Start()
+    private void Start()
     {
         InitializeRoutePoints();
         UpdateScoreText();
     }
 
-    void Update()
+    private void Update()
+    {
+        CheckMove();
+        CheckRoute();
+    }
+    private void CheckMove()
     {
         if (!_routeCompleted && _routePoints != null && _routePoints.Length > NEXT_POINT_INDEX)
         {
-            Move();
+            if (Input.GetMouseButton(0) || Input.touchCount > 0)
+            {
+                Move();
+            }
+
         }
     }
 
-    void InitializeRoutePoints()
+    private void CheckRoute()
+    {
+        if (!_routeCompleted)
+        {
+            UpdateRouteLine();
+        }
+    }
+
+    private void InitializeRoutePoints()
     {
         _routePoints = new Vector3[_routeLine.positionCount];
         _routeLine.GetPositions(_routePoints);
         _routePoints[START_INDEX] = _playerPrefab.transform.position;
     }
 
-    void Move()
+    private void Move()
     {
         Vector3 currentPosition = _playerPrefab.transform.position;
 
@@ -77,13 +94,13 @@ public class PlayerMove : MonoBehaviour
             if (_currentRouteIndex >= _routePoints.Length)
             {
                 _routeCompleted = true;
-                score += pointsForCompletion;
+                _score += _pointsForCompletion;
                 UpdateScoreText();
             }
         }
     }
 
-    void RemoveRoutePoint(int indexToRemove)
+    private void RemoveRoutePoint(int indexToRemove)
     {
         if (indexToRemove < START_INDEX || indexToRemove >= _routePoints.Length)
         {
@@ -98,15 +115,7 @@ public class PlayerMove : MonoBehaviour
         _routeLine.SetPositions(_routePoints);
     }
 
-    void FixedUpdate()
-    {
-        if (!_routeCompleted)
-        {
-            UpdateRouteLine();
-        }
-    }
-
-    void UpdateRouteLine()
+    private void UpdateRouteLine()
     {
         _routePoints[START_INDEX] = _playerPrefab.transform.position;
         _routeLine.SetPosition(START_INDEX, _routePoints[START_INDEX]);
@@ -121,11 +130,11 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    void UpdateScoreText()
+    private void UpdateScoreText()
     {
-        if (scoreText != null)
+        if (_scoreText != null)
         {
-            scoreText.text = "Score: " + score.ToString();
+            _scoreText.text = "Score: " + _score.ToString();
         }
     }
 }
